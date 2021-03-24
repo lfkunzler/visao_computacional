@@ -12,11 +12,7 @@ function [img_out] = ajusta_0_255(img_in)
 minv = double(min(img_in(:)));
 maxv = double(max(img_in(:)));
 
-a = 255/(maxv-minv);
-b = -a*minv;
-
-i_aux = double(img_in);
-i_aux = a*i_aux + b;
+i_aux = 255 * (double(img_in) - minv)/(maxv - minv);
 img_out = uint8(i_aux);
 end
 
