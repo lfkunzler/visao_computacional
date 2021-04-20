@@ -129,3 +129,42 @@ imshow(rot_image(double(imread('fg00009.bmp')), -30));
 %% ex 7
 % Implemente um algoritmo de registro baseado em aproximações bilineares 
 % para registrar a imagem "im_in.bmp" com a imagem de referência "im_ref.bmp".
+
+clc, clear
+
+cf1 = 420;
+lf1 = 23;
+cf2 = 143;
+lf2 = 91;
+cf3 = 121;
+lf3 = 463;
+cf4 = 520;
+lf4 = 260;
+
+po = [510,307,165,494,130,110,345,287]';
+
+m = [cf1 lf1 cf1*lf1 1 0 0 0 0;
+     cf2 lf2 cf2*lf2 1 0 0 0 0;
+     cf3 lf3 cf3*lf3 1 0 0 0 0;
+     cf4 lf4 cf4*lf4 1 0 0 0 0;
+     0 0 0 0 cf1 lf1 cf1*lf1 1;
+     0 0 0 0 cf2 lf2 cf2*lf2 1;
+     0 0 0 0 cf3 lf3 cf3*lf3 1;
+     0 0 0 0 cf4 lf4 cf4*lf4 1];
+
+w = m\po; % calcula a inversa
+
+i = double(imread('im_in.bmp'));
+s = size(i);
+
+for l = 1:s(1)
+  for c = 1:s(2)
+    co = round(w(1)*c + w(2)*l + w(3)*c*l + w(4));
+    lo = round(w(5)*c + w(6)*l + w(7)*c*l + w(8));
+    if (lo<=s(1) && co<=s(2) && co>0 && lo>0)
+      h(l,c) = i(lo,co);
+    end
+  end
+end
+
+imshow(uint8(h));
